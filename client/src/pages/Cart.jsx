@@ -51,11 +51,7 @@ const Cart = () => {
     },[products, cartItems])
 
 
-    useEffect(()=>{
-        if(user){
-            getUserAddress()
-        }
-    },[user])
+    
     
     return products.length > 0 && cartItems ? (
         <div className="flex flex-col md:flex-row mt-16">
