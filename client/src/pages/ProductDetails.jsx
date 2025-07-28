@@ -15,9 +15,9 @@ const ProductDetails = () => {
 
     useEffect(()=>{
         if(products.length > 0){
-            let productsCopy = products.slice(); // we make a copy of products
+            let productsCopy = products.slice();
             productsCopy = productsCopy.filter((item)=> product.category === item.category)
-            setRelatedProducts(productsCopy.slice(0, 5)) // we take the first 5 products 
+            setRelatedProducts(productsCopy.slice(0,5))
         }
     },[products])
 
