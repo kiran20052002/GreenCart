@@ -38,10 +38,44 @@ const Cart = () => {
         }
     }
 
-    
-
     const placeOrder = async ()=>{
-        
+        try {
+            if(!selectedAddress){
+                return toast.error("Please select an address")
+            }
+
+            // Place Order with COD
+            if(paymentOption === "COD"){
+                const {data} = await axios.post('/api/order/cod', {
+                    userId: user._id,
+                    items: cartArray.map(item=> ({product: item._id, quantity: item.quantity})),
+                    address: selectedAddress._id
+                })
+
+                if(data.success){
+                    toast.success(data.message)
+                    setCartItems({})
+                    navigate('/my-orders')
+                }else{
+                    toast.error(data.message)
+                }
+            }else{
+                // Place Order with Stripe
+                const {data} = await axios.post('/api/order/stripe', {
+                    userId: user._id,
+                    items: cartArray.map(item=> ({product: item._id, quantity: item.quantity})),
+                    address: selectedAddress._id
+                })
+
+                if(data.success){
+                    window.location.replace(data.url)
+                }else{
+                    toast.error(data.message)
+                }
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     useEffect(()=>{
@@ -51,7 +85,11 @@ const Cart = () => {
     },[products, cartItems])
 
 
-    
+    useEffect(()=>{
+        if(user){
+            getUserAddress()
+        }
+    },[user])
     
     return products.length > 0 && cartItems ? (
         <div className="flex flex-col md:flex-row mt-16">
