@@ -18,22 +18,11 @@ const port = process.env.PORT;
 await connectDB()
 await connectCloudinary()
 
-const allowedOrigins = [
-  'http://localhost:5173',
-  'https://green-cart-two-pearl.vercel.app'
-];
-
-// CORS FIX
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'), false);
-  },
-  credentials: true
-}));
-
-app.options('*', cors());
+const corsOptions = {
+    origin: process.env.FRONTEND_URL,
+    credentials:true,
+}
+app.use(cors(corsOptions))
 
 // app.post('/stripe', express.raw({type: 'application/json'}), stripeWebhooks)
 
